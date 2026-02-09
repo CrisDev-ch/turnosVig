@@ -1,0 +1,57 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/calendar"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Detalle del Día</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card class="date-header">
+    <ion-card-content>
+      <h2>{{ selectedDate | date: 'EEEE, dd MMMM yyyy' }}</h2>
+    </ion-card-content>
+  </ion-card>
+
+  <div *ngIf="dayEvents.length === 0; else hasEvents" class="empty-state">
+    <p>No hay eventos para este día</p>
+  </div>
+
+  <ng-template #hasEvents>
+    <div class="events-container">
+      <ion-card *ngFor="let event of dayEvents">
+        <ion-card-content>
+          <div class="event-header">
+            <h3 [style.color]="getEventColor(event.type)">
+              {{ getEventTypeLabel(event.type) }}
+            </h3>
+            <span 
+              *ngIf="event.type !== 'shift'"
+              class="status-badge"
+              [class]="'status-' + event.status"
+            >
+              {{ event.status === 'pending' ? 'Pendiente' : event.status === 'approved' ? 'Aprobado' : 'Rechazado' }}
+            </span>
+          </div>
+
+          <div class="event-details">
+            <p *ngIf="isAdmin">{{ event.user_name }}</p>
+            <p>Horario: {{ event.start_time }} - {{ event.end_time }}</p>
+            <p *ngIf="event.notes">Notas: {{ event.notes }}</p>
+          </div>
+
+          <div class="event-actions" *ngIf="isAdmin">
+            <ion-button 
+              expand="block" 
+              color="danger"
+              (click)="deleteEvent(event.id)"
+            >
+              Eliminar
+            </ion-button>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </ng-template>
+</ion-content>

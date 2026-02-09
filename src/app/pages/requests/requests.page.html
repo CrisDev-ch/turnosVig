@@ -1,0 +1,87 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/calendar"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ isAdmin ? 'Solicitudes' : 'Mis Solicitudes' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card *ngIf="pendingRequests.length === 0 && processedRequests.length === 0" class="empty-state">
+    <ion-card-content>
+      <p>No hay solicitudes</p>
+    </ion-card-content>
+  </ion-card>
+
+  <div *ngIf="pendingRequests.length > 0" class="requests-section">
+    <h2 class="section-title">PENDIENTES</h2>
+    <ion-card *ngFor="let request of pendingRequests" class="request-card">
+      <ion-card-content>
+        <div class="request-header">
+          <div>
+            <h3 [style.color]="getEventColor(request.type)">
+              {{ getEventTypeLabel(request.type) }}
+            </h3>
+            <p *ngIf="isAdmin" class="user-name">{{ request.user_name }}</p>
+          </div>
+          <span class="status-badge status-pending">Pendiente</span>
+        </div>
+
+        <div class="request-details">
+          <p>Fecha: {{ request.date | date: 'dd/MM/yyyy' }}</p>
+          <p>Horario: {{ request.start_time }} - {{ request.end_time }}</p>
+          <p *ngIf="request.notes">Notas: {{ request.notes }}</p>
+        </div>
+
+        <div class="request-actions" *ngIf="isAdmin">
+          <ion-button
+            expand="block"
+            color="success"
+            size="small"
+            (click)="updateEventStatus(request.id, 'approved')"
+          >
+            Aprobar
+          </ion-button>
+          <ion-button
+            expand="block"
+            color="danger"
+            size="small"
+            (click)="updateEventStatus(request.id, 'rejected')"
+          >
+            Rechazar
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <div *ngIf="processedRequests.length > 0" class="requests-section">
+    <h2 class="section-title">PROCESADAS</h2>
+    <ion-card *ngFor="let request of processedRequests" class="request-card">
+      <ion-card-content>
+        <div class="request-header">
+          <div>
+            <h3 [style.color]="getEventColor(request.type)">
+              {{ getEventTypeLabel(request.type) }}
+            </h3>
+            <p *ngIf="isAdmin" class="user-name">{{ request.user_name }}</p>
+          </div>
+          <span
+            class="status-badge"
+            [class.status-approved]="request.status === 'approved'"
+            [class.status-rejected]="request.status === 'rejected'"
+          >
+            {{ request.status === 'approved' ? 'Aprobado' : 'Rechazado' }}
+          </span>
+        </div>
+
+        <div class="request-details">
+          <p>Fecha: {{ request.date | date: 'dd/MM/yyyy' }}</p>
+          <p>Horario: {{ request.start_time }} - {{ request.end_time }}</p>
+          <p *ngIf="request.notes">Notas: {{ request.notes }}</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

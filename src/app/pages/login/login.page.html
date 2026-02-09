@@ -1,0 +1,42 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Gestión de Turnos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="login-content">
+  <div class="login-container">
+    <div class="login-header">
+      <h1>Bienvenido</h1>
+      <p>Gestión turnos / Vigilantes Cesfam 4</p>
+    </div>
+
+    <form (ngSubmit)="handleLogin()" class="login-form">
+      <ion-item class="input-item">
+        <ion-label position="stacked">Email</ion-label>
+        <ion-input
+          [(ngModel)]="email"
+          name="email"
+          type="email"
+          placeholder="Ingrese su correo"
+          required
+        ></ion-input>
+      </ion-item>
+
+      <ion-item class="input-item">
+        <ion-label position="stacked">Contraseña</ion-label>
+        <ion-input
+          [(ngModel)]="password"
+          name="password"
+          type="password"
+          placeholder="Ingrese su contraseña"
+          required
+        ></ion-input>
+      </ion-item>
+
+      <ion-button expand="block" type="submit" class="login-button">
+        Iniciar Sesión
+      </ion-button>
+    </form>
+  </div>
+</ion-content>

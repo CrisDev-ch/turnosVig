@@ -1,0 +1,114 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/calendar"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ isAdmin ? 'Crear Evento' : 'Nueva Solicitud' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <form (ngSubmit)="handleEventSubmit()" class="event-form">
+    <ion-card>
+      <ion-card-content class="form-content">
+        <ion-item *ngIf="isAdmin" class="form-item">
+          <ion-label position="stacked">Trabajador</ion-label>
+          <ion-select
+            [(ngModel)]="selectedUser"
+            name="selectedUser"
+          >
+            <ion-select-option *ngFor="let worker of workers" [value]="worker.id">
+              {{ worker.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item class="form-item">
+          <ion-label position="stacked">Tipo {{ isAdmin ? 'de Evento' : 'de Solicitud' }}</ion-label>
+          <ion-select
+            [(ngModel)]="selectedType"
+            name="selectedType"
+            (ionChange)="handleEventTypeChange()"
+          >
+            <ion-select-option *ngIf="isAdmin" value="shift">Turno</ion-select-option>
+            <ion-select-option value="overtime">Hora Extra</ion-select-option>
+            <ion-select-option value="leave">Permiso</ion-select-option>
+            <ion-select-option value="vacation">Vacaciones</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item class="form-item">
+          <ion-label position="stacked">Fecha de Inicio</ion-label>
+          <ion-input
+            [(ngModel)]="startDate"
+            name="startDate"
+            type="date"
+            required
+          ></ion-input>
+        </ion-item>
+
+        <ion-item class="form-item">
+          <ion-label position="stacked">Fecha de Término</ion-label>
+          <ion-input
+            [(ngModel)]="endDate"
+            name="endDate"
+            type="date"
+            required
+          ></ion-input>
+        </ion-item>
+
+        <div *ngIf="showScheduleSelect">
+          <ion-item class="form-item">
+            <ion-label position="stacked">Horario Preestablecido</ion-label>
+            <ion-select (ionChange)="handleScheduleChange($event)">
+              <ion-select-option value="">Seleccionar horario</ion-select-option>
+              <ion-select-option *ngFor="let schedule of SHIFT_SCHEDULES" [value]="schedule.start + '|' + schedule.end">
+                {{ schedule.label }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+
+        <div class="time-row">
+          <ion-item class="form-item form-item-half">
+            <ion-label position="stacked">Hora Inicio</ion-label>
+            <ion-input
+              [(ngModel)]="startTime"
+              name="startTime"
+              type="time"
+              required
+            ></ion-input>
+          </ion-item>
+
+          <ion-item class="form-item form-item-half">
+            <ion-label position="stacked">Hora Fin</ion-label>
+            <ion-input
+              [(ngModel)]="endTime"
+              name="endTime"
+              type="time"
+              required
+            ></ion-input>
+          </ion-item>
+        </div>
+
+        <ion-item class="form-item">
+          <ion-label position="stacked">Notas (opcional)</ion-label>
+          <ion-textarea
+            [(ngModel)]="notes"
+            name="notes"
+            placeholder="Agregar notas adicionales..."
+            rows="3"
+          ></ion-textarea>
+        </ion-item>
+
+        <ion-button
+          expand="block"
+          type="submit"
+          class="submit-button"
+        >
+          {{ isAdmin ? 'Crear Evento' : 'Enviar Solicitud' }}
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </form>
+</ion-content>

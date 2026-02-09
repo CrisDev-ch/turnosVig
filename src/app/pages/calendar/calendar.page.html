@@ -1,0 +1,130 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      {{ isAdmin ? '📆 Calendario General' : 'Mi Calendario' }}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">Salir</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="calendar-content">
+  <ion-card class="calendar-header">
+    <ion-card-header>
+      <p class="user-name">{{ currentUser?.name }}</p>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-segment [value]="currentDate.getMonth()" (ionChange)="onSegmentChange($event)">
+        <ion-segment-button [value]="0">Ene</ion-segment-button>
+        <ion-segment-button [value]="1">Feb</ion-segment-button>
+        <ion-segment-button [value]="2">Mar</ion-segment-button>
+        <ion-segment-button [value]="3">Abr</ion-segment-button>
+        <ion-segment-button [value]="4">May</ion-segment-button>
+        <ion-segment-button [value]="5">Jun</ion-segment-button>
+        <ion-segment-button [value]="6">Jul</ion-segment-button>
+        <ion-segment-button [value]="7">Ago</ion-segment-button>
+        <ion-segment-button [value]="8">Sep</ion-segment-button>
+        <ion-segment-button [value]="9">Oct</ion-segment-button>
+        <ion-segment-button [value]="10">Nov</ion-segment-button>
+        <ion-segment-button [value]="11">Dic</ion-segment-button>
+      </ion-segment>
+      
+      <div class="calendar-nav">
+        <ion-button (click)="changeMonth(-1)" fill="outline">← Anterior</ion-button>
+        <h3 class="month-year">{{ monthNames[currentDate.getMonth()] }} {{ currentDate.getFullYear() }}</h3>
+        <ion-button (click)="changeMonth(1)" fill="outline">Siguiente →</ion-button>
+      </div>
+
+      <div class="calendar-grid">
+        <div *ngFor="let dayName of dayNames" class="day-header">
+          {{ dayName }}
+        </div>
+
+        <div 
+          *ngFor="let day of calendarDays"  
+          class="calendar-day"
+          [class.empty]="day.day === 0"
+          [class.today]="day.isToday"
+          (click)="day.day !== 0 && selectDay(day.date)"
+        >
+          <span *ngIf="day.day !== 0" class="day-number">{{ day.day }}</span>
+          <div class="event-dots">
+            <span 
+              *ngFor="let event of day.events" 
+              class="event-dot"
+              [style.background-color]="getEventColor(event.type)"
+            ></span>
+          </div>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Leyenda</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="legend">
+        <div class="legend-item">
+          <span class="legend-dot" style="background-color: #2563eb;"></span>
+          <span>Turno (Aprobado)</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background-color: #eab308;"></span>
+          <span>Hora Extra (Aprobado)</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background-color: #ef4444;"></span>
+          <span>Permiso (Aprobado)</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background-color: #10b981;"></span>
+          <span>Vacaciones (Aprobado)</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background-color: #9ca3af;"></span>
+          <span>Solicitud Pendiente</span>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-button 
+        expand="block" 
+        (click)="navigateTo('/create-event')"
+        color="primary"
+      >
+        {{ isAdmin ? 'Crear Evento' : 'Nueva Solicitud' }}
+      </ion-button>
+      <ion-button 
+        *ngIf="!isAdmin"
+        expand="block" 
+        (click)="navigateTo('/general-calendar')"
+        color="primary"
+      >
+        📆 General
+      </ion-button>
+      <ion-button 
+        expand="block" 
+        (click)="navigateTo('/requests')"
+        color="primary"
+      >
+        Solicitudes
+      </ion-button>
+      <ion-button 
+        *ngIf="isAdmin"
+        expand="block" 
+        (click)="navigateTo('/users')"
+        color="primary"
+      >
+        Usuarios
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

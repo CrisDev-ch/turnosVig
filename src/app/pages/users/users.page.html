@@ -1,0 +1,83 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/calendar"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Gestión de Usuarios</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="users-section">
+    <h2 class="section-title" *ngIf="workers.length > 0">TRABAJADORES REGISTRADOS</h2>
+    
+    <ion-card *ngFor="let worker of workers" class="user-card">
+      <ion-card-content>
+        <div class="user-info">
+          <div>
+            <h3>{{ worker.name }}</h3>
+            <p>{{ worker.email }}</p>
+          </div>
+          <ion-button
+            color="danger"
+            fill="outline"
+            size="small"
+            (click)="confirmDeleteUser(worker.id)"
+          >
+            Eliminar
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <ion-card class="create-user-section">
+    <ion-card-header>
+      <ion-card-title>Crear Nuevo Usuario</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form (ngSubmit)="handleCreateUser()">
+        <ion-item class="form-item">
+          <ion-label position="stacked">Nombre</ion-label>
+          <ion-input
+            [(ngModel)]="newUserName"
+            name="newUserName"
+            type="text"
+            placeholder="Nombre completo"
+            required
+          ></ion-input>
+        </ion-item>
+
+        <ion-item class="form-item">
+          <ion-label position="stacked">Email</ion-label>
+          <ion-input
+            [(ngModel)]="newUserEmail"
+            name="newUserEmail"
+            type="email"
+            placeholder="usuario@email.com"
+            required
+          ></ion-input>
+        </ion-item>
+
+        <ion-item class="form-item">
+          <ion-label position="stacked">Contraseña</ion-label>
+          <ion-input
+            [(ngModel)]="newUserPassword"
+            name="newUserPassword"
+            type="password"
+            placeholder="Contraseña (mínimo 6 caracteres)"
+            required
+          ></ion-input>
+        </ion-item>
+
+        <ion-button
+          expand="block"
+          type="submit"
+          class="create-button"
+        >
+          Crear Usuario
+        </ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

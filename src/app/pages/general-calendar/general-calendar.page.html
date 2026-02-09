@@ -1,0 +1,69 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/calendar"></ion-back-button>
+    </ion-buttons>
+    <ion-title>📆 Calendario General</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="calendar-content">
+  <ion-card class="calendar-header">
+    <ion-card-content>
+      <div class="calendar-nav">
+        <ion-button (click)="changeMonth(-1)" fill="outline">← Anterior</ion-button>
+        <h3 class="month-year">{{ monthNames[currentDate.getMonth()] }} {{ currentDate.getFullYear() }}</h3>
+        <ion-button (click)="changeMonth(1)" fill="outline">Siguiente →</ion-button>
+      </div>
+
+      <div class="calendar-grid">
+        <div *ngFor="let dayName of dayNames" class="day-header">
+          {{ dayName }}
+        </div>
+
+        <div
+          *ngFor="let day of calendarDays"
+          class="calendar-day"
+          [class.empty]="day.day === 0"
+          [class.today]="day.isToday"
+          (click)="day.day !== 0 && selectDay(day.date)"
+        >
+          <span *ngIf="day.day !== 0" class="day-number">{{ day.day }}</span>
+          <div class="event-dots">
+            <span
+              *ngFor="let event of day.events"
+              class="event-dot"
+              [style.background-color]="getEventColor(event.type)"
+            ></span>
+          </div>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Leyenda</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="legend">
+        <div class="legend-item">
+          <span class="legend-dot" style="background-color: #2563eb;"></span>
+          <span>Turno (Aprobado)</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background-color: #eab308;"></span>
+          <span>Hora Extra (Aprobado)</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background-color: #ef4444;"></span>
+          <span>Permiso (Aprobado)</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background-color: #10b981;"></span>
+          <span>Vacaciones (Aprobado)</span>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

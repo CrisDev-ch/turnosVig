@@ -1,0 +1,43 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/general-calendar"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Detalle del Día</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card class="date-header">
+    <ion-card-content>
+      <h2>{{ selectedDate | date: 'EEEE, dd MMMM yyyy' }}</h2>
+    </ion-card-content>
+  </ion-card>
+
+  <div *ngIf="dayEvents.length === 0; else hasEvents" class="empty-state">
+    <p>No hay eventos para este día</p>
+  </div>
+
+  <ng-template #hasEvents>
+    <div class="events-container">
+      <ion-card *ngFor="let userName of userNames">
+        <ion-card-header>
+          <ion-card-title>{{ userName }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div *ngFor="let event of eventsByUser[userName]" class="event-item">
+            <div class="event-header">
+              <h4 [style.color]="getEventColor(event.type)">
+                {{ getEventTypeLabel(event.type) }}
+              </h4>
+            </div>
+            <div class="event-details">
+              <p>Horario: {{ event.start_time }} - {{ event.end_time }}</p>
+              <p *ngIf="event.notes">Notas: {{ event.notes }}</p>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </ng-template>
+</ion-content>
